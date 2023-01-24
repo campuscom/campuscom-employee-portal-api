@@ -18,9 +18,16 @@ from django.urls import path, include
 from rest_framework import routers
 
 from rest_framework_simplejwt.views import TokenRefreshView
-from app.views import (health_check, MyTokenObtainPairView)
+from app.views import (health_check, MyTokenObtainPairView, EmployeeViewSet, OrganizationViewSet,
+                       OrganizationTypeViewSet, DepartmentViewSet)
 
 router = routers.DefaultRouter()
+
+router.register(r'employees', EmployeeViewSet, 'employees')
+
+router.register(r'organization-types', OrganizationTypeViewSet, 'organization_types')
+router.register(r'organizations', OrganizationViewSet, 'organizations')
+router.register(r'departments', DepartmentViewSet, 'departments')
 
 
 urlpatterns = [

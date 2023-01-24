@@ -1,2 +1,7 @@
 from .funcs import health_check
 from .token_generator import MyTokenObtainPairView
+
+from .organization_type_view_set import OrganizationTypeViewSet
+from .organization_view_set import OrganizationViewSet
+from .department_view_set import DepartmentViewSet
+from .employee_view_set import EmployeeViewSet
