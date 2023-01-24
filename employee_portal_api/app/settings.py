@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +26,9 @@ SECRET_KEY = 'django-insecure-@tj%i56w=5c115c))4!i#&k%vuxu&e&4blum$kp2s@&_w8^4ax
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
+
+PAYMENT_LIB_DIR = os.path.join(BASE_DIR, 'payments')
 
 
 # Application definition
@@ -37,7 +40,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'shared_models',
+
+    'rest_framework',
+    'rest_framework_api_key',
+    'corsheaders',
 ]
+
+AUTH_USER_MODEL = 'shared_models.CustomUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
