@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from shared_models.models import (Permission, CustomRole, Employee, Organization, OrganizationType, Department)
+from shared_models.models import (Permission, CustomRole, Employee, Organization, OrganizationType, Department,
+                                  CustomUser)
 
 from django_scopes import scopes_disabled
 from django.utils import timezone
@@ -34,4 +35,26 @@ class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Department
         fields = ('id', 'organization', 'name', 'short_name', 'description', 'is_active')
+
+
+class CustomUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ('id', 'username', 'first_name', 'last_name', 'email', 'is_active', 'primary_contact_number',
+                  'is_scope_disabled', 'db_context', 'mfa_enabled', 'custom_roles', 'secret_key')
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+
+        try:
+            data['stores'] = data['db_context']['Store']
+        except KeyError:
+            data['stores'] = []
+
+        try:
+            data['course_providers'] = data['db_context']['CourseProvider']
+        except KeyError:
+            data['course_providers'] = []
+
+        return data
 
