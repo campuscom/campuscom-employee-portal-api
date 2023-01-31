@@ -18,24 +18,6 @@ class CustomRoleSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'permissions', 'menu_permissions')
 
 
-class OrganizationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Organization
-        fields = ('id', 'name', 'short_name', 'organization_type', 'parent_organization', 'description', 'address', 'email', 'contact_no')
-
-
-class GetOrganizationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Organization
-        fields = ('id', 'ref_id', 'name', 'short_name', 'organization_type', 'parent_organization', 'description', 'address', 'email', 'contact_no')
-
-
-class OrganizationTypeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OrganizationType
-        fields = ('id', 'name', 'description', 'is_active', 'sort_position')
-
-
 class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
