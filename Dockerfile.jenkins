@@ -42,8 +42,8 @@ WORKDIR /opt/app
 ENV PATH="/opt/venv/bin:$PATH"
 
 EXPOSE 5432
-EXPOSE 5000
-# CMD ["gunicorn", "--workers=3", "--threads=6", "--worker-class=gthread", "--chdir=/opt/app/admin_api", "-b", ":5000", "--log-level=info", "app.wsgi:application"]
+EXPOSE 5002
+# CMD ["gunicorn", "--workers=3", "--threads=6", "--worker-class=gthread", "--chdir=/opt/app/admin_api", "-b", ":5002", "--log-level=info", "app.wsgi:application"]
 
 CMD ["docker-entrypoint.sh"]
 

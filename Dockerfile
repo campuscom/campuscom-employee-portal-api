@@ -11,21 +11,21 @@ ARG SSH_PRIVATE_KEY
 RUN echo "${SSH_PRIVATE_KEY}" > /root/.ssh/id_rsa && chmod 600 /root/.ssh/id_rsa
 
 # Make sure your domain is accepted
-# RUN touch /root/.ssh/known_hosts
-# ARG SSH_KNOWN_HOST
-# RUN ssh-keyscan ${SSH_KNOWN_HOST} >> /root/.ssh/known_hosts
+RUN touch /root/.ssh/known_hosts
+ARG SSH_KNOWN_HOST
+RUN ssh-keyscan ${SSH_KNOWN_HOST} >> /root/.ssh/known_hosts
 
-# ARG REPO_URL_CC_LIBS
-# ARG VERSION_CC_LIBS
-# RUN git clone --branch ${VERSION_CC_LIBS} ${REPO_URL_CC_LIBS} /opt/marketplace-shared-lib/
-#
-# ARG REPO_URL_CC_MODELS_PG
-# ARG VERSION_CC_MODELS_PG
-# RUN git clone --branch ${VERSION_CC_MODELS_PG} ${REPO_URL_CC_MODELS_PG} /opt/campuscom-shared-models/
-#
-# ARG REPO_URL_CC_MODELS_MONGO
-# ARG VERSION_CC_MODELS_MONGO
-# RUN git clone --branch ${VERSION_CC_MODELS_MONGO} ${REPO_URL_CC_MODELS_MONGO} /opt/marketplace-shared-models/
+ARG REPO_URL_CC_LIBS
+ARG VERSION_CC_LIBS
+RUN git clone --branch ${VERSION_CC_LIBS} ${REPO_URL_CC_LIBS} /opt/marketplace-shared-lib/
+
+ARG REPO_URL_CC_MODELS_PG
+ARG VERSION_CC_MODELS_PG
+RUN git clone --branch ${VERSION_CC_MODELS_PG} ${REPO_URL_CC_MODELS_PG} /opt/campuscom-shared-models/
+
+ARG REPO_URL_CC_MODELS_MONGO
+ARG VERSION_CC_MODELS_MONGO
+RUN git clone --branch ${VERSION_CC_MODELS_MONGO} ${REPO_URL_CC_MODELS_MONGO} /opt/marketplace-shared-models/
 
 COPY . .
 
@@ -42,8 +42,8 @@ WORKDIR /opt/app
 ENV PATH="/opt/venv/bin:$PATH"
 
 EXPOSE 5432
-EXPOSE 5000
-# CMD ["gunicorn", "--workers=3", "--threads=6", "--worker-class=gthread", "--chdir=/opt/app/admin_api", "-b", ":5000", "--log-level=info", "app.wsgi:application"]
+EXPOSE 5002
+# CMD ["gunicorn", "--workers=3", "--threads=6", "--worker-class=gthread", "--chdir=/opt/app/admin_api", "-b", ":5002", "--log-level=info", "app.wsgi:application"]
 
 CMD ["docker-entrypoint.sh"]
 
