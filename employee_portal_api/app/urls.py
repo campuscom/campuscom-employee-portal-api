@@ -18,8 +18,8 @@ from django.urls import path, include
 from rest_framework import routers
 
 from rest_framework_simplejwt.views import TokenRefreshView
-from app.views import (health_check, MyTokenObtainPairView, EmployeeViewSet, OrganizationViewSet,
-                       OrganizationTypeViewSet, DepartmentViewSet)
+
+from app.views import (health_check, MyTokenObtainPairView, EmployeeViewSet, OrganizationViewSet, OrganizationTypeViewSet, DepartmentViewSet)
 
 router = routers.DefaultRouter()
 

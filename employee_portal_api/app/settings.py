@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-@tj%i56w=5c115c))4!i#&k%vuxu&e&4blum$kp2s@&_w8^4ax
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = '*'
 
 PAYMENT_LIB_DIR = os.path.join(BASE_DIR, 'payments')
 
@@ -52,6 +52,7 @@ INSTALLED_APPS = [
 AUTH_USER_MODEL = 'shared_models.CustomUser'
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -98,8 +99,13 @@ DATABASES = {
 
 
 REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+        'app.custom_permissions.HasRoleBasedPermission',
     ),
     'EXCEPTION_HANDLER': 'app.custom_exception_handler.custom_exception_handler'
 }
