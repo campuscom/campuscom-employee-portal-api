@@ -99,25 +99,3 @@ class GetDepartmentSerializer(serializers.ModelSerializer):
         fields = ('id', 'organization', 'name', 'short_name', 'description', 'is_active')
         depth = 1
 
-
-class CustomUserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CustomUser
-        fields = ('id', 'username', 'first_name', 'last_name', 'email', 'is_active', 'primary_contact_number',
-                  'is_scope_disabled', 'db_context', 'mfa_enabled', 'custom_roles', 'secret_key')
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-
-        try:
-            data['stores'] = data['db_context']['Store']
-        except KeyError:
-            data['stores'] = []
-
-        try:
-            data['course_providers'] = data['db_context']['CourseProvider']
-        except KeyError:
-            data['course_providers'] = []
-
-        return data
-
