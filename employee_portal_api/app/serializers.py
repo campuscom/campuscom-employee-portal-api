@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from shared_models.models import (Permission, CustomRole, Employee, Organization, OrganizationType, Department)
+from shared_models.models import (Permission, CustomRole, Employee, Organization, OrganizationType, Department,
+                                  CustomUser, Profile)
 
 from django_scopes import scopes_disabled
 from django.utils import timezone
@@ -29,9 +30,72 @@ class GetEmployeeSerializer(serializers.ModelSerializer):
         model = Employee
         fields = ('id', 'ref_id', 'profile', 'user', 'organization', 'department', 'address', 'gender', 'is_active')
 
+    def to_representation(self, instance):
+            data = super().to_representation(instance)
+            try:
+                profile = Profile.objects.get(pk=data['profile'])
+            except Profile.DoesNotExist:
+                pass
+            else:
+                data['profile'] = {
+                    'id': str(profile.id),
+                    'name': profile.first_name + ' ' + profile.last_name,
+                    'first_name': profile.first_name,
+                    'last_name': profile.last_name,
+                    'primary_email': profile.primary_email,
+                }
+
+            try:
+                user = CustomUser.objects.get(pk=data['user'])
+            except CustomUser.DoesNotExist:
+                pass
+            else:
+                data['user'] = {
+                    'id': str(user.id),
+                    'first_name': user.first_name,
+                    'last_name': user.last_name,
+                    'email': user.email,
+                    'username': user.username
+                }
+
+            try:
+                organization = Organization.objects.get(pk=data['organization'])
+            except Organization.DoesNotExist:
+                pass
+            else:
+                data['organization'] = {
+                    'id': str(organization.id),
+                    'ref_id': str(organization.ref_id),
+                    'name': organization.name,
+                    'short_name': organization.short_name,
+                    'description': organization.description,
+                    'email': organization.email,
+                    'contact_no': organization.contact_no,
+                }
+
+            try:
+                department = Department.objects.get(pk=data['department'])
+            except Department.DoesNotExist:
+                pass
+            else:
+                data['user'] = {
+                    'id': str(department.id),
+                    'name': department.name,
+                    'short_name': department.short_name
+                }
+
+            return data
+
 
 class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Department
         fields = ('id', 'organization', 'name', 'short_name', 'description', 'is_active')
+
+
+class GetDepartmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Department
+        fields = ('id', 'organization', 'name', 'short_name', 'description', 'is_active')
+        depth = 1
 

@@ -11,7 +11,7 @@ from rest_framework.status import (
     HTTP_400_BAD_REQUEST
 )
 
-from app.serializers import DepartmentSerializer
+from app.serializers import DepartmentSerializer, GetDepartmentSerializer
 
 
 class DepartmentViewSet(viewsets.ModelViewSet, ViewDataMixin, PaginatorMixin):
@@ -34,12 +34,12 @@ class DepartmentViewSet(viewsets.ModelViewSet, ViewDataMixin, PaginatorMixin):
 
     def retrieve(self, request, *args, **kwargs):
         dept = self.get_object()
-        serializer = self.serializer_class(dept)
+        serializer = GetDepartmentSerializer(dept)
         return Response(self.object_decorator(serializer.data))
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
-        serializer = self.serializer_class(queryset, many=True)
+        serializer = GetDepartmentSerializer(queryset, many=True)
         return Response(self.paginate(serializer.data), status=HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
