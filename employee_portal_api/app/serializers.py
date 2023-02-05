@@ -99,3 +99,10 @@ class GetDepartmentSerializer(serializers.ModelSerializer):
         fields = ('id', 'organization', 'name', 'short_name', 'description', 'is_active')
         depth = 1
 
+
+class GetOrganizationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Organization
+        fields = ('id', 'ref_id', 'name', 'short_name', 'organization_type', 'parent_organization', 'description', 'address', 'email', 'contact_no')
+        depth = 1
+
