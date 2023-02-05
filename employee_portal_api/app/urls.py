@@ -19,7 +19,7 @@ from rest_framework import routers
 
 from rest_framework_simplejwt.views import TokenRefreshView
 
-from app.views import (health_check, MyTokenObtainPairView, EmployeeViewSet, DepartmentViewSet, CorporateUserViewSet)
+from app.views import (health_check, MyTokenObtainPairView, EmployeeViewSet, DepartmentViewSet)
 
 router = routers.DefaultRouter()
 

@@ -1,4 +1,4 @@
-from shared_models.models import Employee
+from shared_models.models import Employee, CustomUser, Profile
 from rest_framework import viewsets
 from campuslibs.shared_utils.shared_function import PaginatorMixin, SharedMixin
 from campuslibs.shared_utils.data_decorators import ViewDataMixin
@@ -43,14 +43,66 @@ class EmployeeViewSet(viewsets.ModelViewSet, ViewDataMixin, PaginatorMixin):
         return Response(self.paginate(serializer.data), status=HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data)
+        data = request.data.copy()
+        user = data.get('user', None)
+        try:
+            user_data = CustomUser.objects.get(pk=user)
+        except CustomUser.DoesNotExist:
+            return Response(
+                {
+                    "error": {"message": "user does not exist"},
+                    "status_code": 400,
+                },
+                status=HTTP_400_BAD_REQUEST,
+            )
+        else:
+            try:
+                profile = Profile.objects.get(primary_email=user_data.email)
+            except Profile.DoesNotExist:
+                return Response(
+                    {
+                        "error": {"message": "profile does not exist for this user"},
+                        "status_code": 400,
+                    },
+                    status=HTTP_400_BAD_REQUEST,
+                )
+            else:
+                data['profile'] = str(profile.id)
+
+        serializer = self.serializer_class(data=data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
         return Response(self.object_decorator(serializer.data), status=HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
-        serializer = self.serializer_class(instance, data=request.data, partial=True)
+        data = request.data.copy()
+        user = data.get('user', None)
+        if user:
+            try:
+                user_data = CustomUser.objects.get(pk=user)
+            except CustomUser.DoesNotExist:
+                return Response(
+                    {
+                        "error": {"message": "user does not exist"},
+                        "status_code": 400,
+                    },
+                    status=HTTP_400_BAD_REQUEST,
+                )
+            else:
+                try:
+                    profile = Profile.objects.get(primary_email=user_data.email)
+                except Profile.DoesNotExist:
+                    return Response(
+                        {
+                            "error": {"message": "profile does not exist for this user"},
+                            "status_code": 400,
+                        },
+                        status=HTTP_400_BAD_REQUEST,
+                    )
+                else:
+                    data['profile'] = str(profile.id)
+        serializer = self.serializer_class(instance, data=data, partial=True)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
         return Response(self.object_decorator(serializer.data), status=HTTP_200_OK)
