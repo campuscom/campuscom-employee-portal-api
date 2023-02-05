@@ -26,9 +26,6 @@ router = routers.DefaultRouter()
 router.register(r'employees', EmployeeViewSet, 'employees')
 router.register(r'departments', DepartmentViewSet, 'departments')
 
-# create user for an employee
-router.register(r'corporate-users', CorporateUserViewSet, 'corporate_users')
-
 
 urlpatterns = [
     path('', include(router.urls)),
