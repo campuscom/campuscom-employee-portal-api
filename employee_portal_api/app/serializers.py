@@ -37,6 +37,13 @@ class DepartmentSerializer(serializers.ModelSerializer):
         fields = ('id', 'organization', 'name', 'short_name', 'description', 'is_active')
 
 
+class GetDepartmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Department
+        fields = ('id', 'organization', 'name', 'short_name', 'description', 'is_active')
+        depth = 1
+
+
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
