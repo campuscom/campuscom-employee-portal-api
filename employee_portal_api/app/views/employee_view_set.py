@@ -1,4 +1,4 @@
-from shared_models.models import Employee, CustomUser, Profile
+from shared_models.models import Employee, CustomUser, Profile, Department
 from rest_framework import viewsets
 from campuslibs.shared_utils.shared_function import PaginatorMixin, SharedMixin
 from campuslibs.shared_utils.data_decorators import ViewDataMixin
@@ -45,6 +45,20 @@ class EmployeeViewSet(viewsets.ModelViewSet, ViewDataMixin, PaginatorMixin):
     def create(self, request, *args, **kwargs):
         data = request.data.copy()
         user = data.get('user', None)
+
+        try:
+            dept = Department.objects.get(pk=data.get('department', None), organization=data.get('organization', None))
+        except Department.DoesNotExist:
+            return Response(
+                {
+                    "error": {"message": "this department does not exist for the organization"},
+                    "status_code": 400,
+                },
+                status=HTTP_400_BAD_REQUEST,
+            )
+        else:
+            pass
+
         try:
             user_data = CustomUser.objects.get(pk=user)
         except CustomUser.DoesNotExist:
