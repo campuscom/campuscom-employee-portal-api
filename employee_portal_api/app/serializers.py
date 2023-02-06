@@ -78,7 +78,7 @@ class GetEmployeeSerializer(serializers.ModelSerializer):
             except Department.DoesNotExist:
                 pass
             else:
-                data['user'] = {
+                data['department'] = {
                     'id': str(department.id),
                     'name': department.name,
                     'short_name': department.short_name
