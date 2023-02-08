@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from shared_models.models import (Permission, CustomRole, Employee, Organization, OrganizationType, Department,
-                                  CustomUser, Profile, EmployeeAccount)
+                                  CustomUser, Profile, EmployeeAccount, CreditRequest, CreditRequestHistory)
 
 from django_scopes import scopes_disabled
 from django.utils import timezone
@@ -119,3 +119,21 @@ class GetEmployeeAccountSerializer(serializers.ModelSerializer):
         fields = ('id', 'ref_id', 'employee', 'order', 'credit_request', 'amount', 'transaction_type', 'note')
         depth = 1
 
+
+class CreditRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CreditRequest
+        fields = ('id', 'employee', 'amount', 'reason', 'status', 'approver_note', 'approved_by', 'approval_date')
+
+
+class GetCreditRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CreditRequest
+        fields = ('id', 'ref_id', 'employee', 'amount', 'reason', 'status', 'approver_note', 'approved_by', 'approval_date')
+        depth = 1
+
+
+class CreditRequestHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CreditRequestHistory
+        fields = ('id', 'credit_request', 'employee', 'amount', 'reason', 'status', 'approver_note', 'approved_by', 'approval_date', 'activity_type')
