@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from shared_models.models import (Permission, CustomRole, Employee, Organization, OrganizationType, Department,
-                                  CustomUser, Profile)
+                                  CustomUser, Profile, EmployeeAccount)
 
 from django_scopes import scopes_disabled
 from django.utils import timezone
@@ -104,5 +104,18 @@ class GetOrganizationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Organization
         fields = ('id', 'ref_id', 'name', 'short_name', 'organization_type', 'parent_organization', 'description', 'address', 'email', 'contact_no')
+        depth = 1
+
+
+class EmployeeAccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmployeeAccount
+        fields = ('id', 'employee', 'order', 'credit_request', 'amount', 'transaction_type', 'note')
+
+
+class GetEmployeeAccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmployeeAccount
+        fields = ('id', 'ref_id', 'employee', 'order', 'credit_request', 'amount', 'transaction_type', 'note')
         depth = 1
 
