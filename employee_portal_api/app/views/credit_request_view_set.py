@@ -47,7 +47,13 @@ class CreditRequestViewSet(viewsets.ModelViewSet, ViewDataMixin, PaginatorMixin)
         data['status'] = 'pending'
         serializer = self.serializer_class(data=data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save()
+            cr = serializer.save()
+            data = serializer.data
+            data.pop('id')
+            data['activity_type'] = 'insert'
+            data['credit_request'] = cr
+            data['employee'] = cr.employee
+            CreditRequestHistory.objects.create(**data)
         return Response(self.object_decorator(serializer.data), status=HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
