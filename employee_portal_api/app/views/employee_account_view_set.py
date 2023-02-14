@@ -19,7 +19,7 @@ class EmployeeAccountViewSet(viewsets.ModelViewSet, ViewDataMixin, PaginatorMixi
     A viewset for viewing and editing employee accounts.
     """
     serializer_class = EmployeeAccountSerializer
-    http_method_names = ["get", "head", "post", "patch", "update"]
+    http_method_names = ["get", "head", "post"]
     model = EmployeeAccount
 
     def get_queryset(self):
@@ -48,9 +48,3 @@ class EmployeeAccountViewSet(viewsets.ModelViewSet, ViewDataMixin, PaginatorMixi
             serializer.save()
         return Response(self.object_decorator(serializer.data), status=HTTP_201_CREATED)
 
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.serializer_class(instance, data=request.data, partial=True)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-        return Response(self.object_decorator(serializer.data), status=HTTP_200_OK)
