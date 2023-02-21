@@ -1,10 +1,12 @@
 from rest_framework import serializers
 
-from shared_models.models import (Permission, CustomRole, Employee, Organization, OrganizationType, Department,
-                                  CustomUser, Profile, EmployeeAccount, CreditRequest, CreditRequestHistory)
+from shared_models.models import (Permission, CustomRole, Employee, Organization, OrganizationType, Department, Course,
+                                  CustomUser, Profile, EmployeeAccount, CreditRequest, CreditRequestHistory,
+                                  CourseProvider)
 
 from django_scopes import scopes_disabled
 from django.utils import timezone
+from models.course.course import Course as CourseModel
 
 
 class PermissionSerializer(serializers.ModelSerializer):
@@ -137,3 +139,53 @@ class CreditRequestHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = CreditRequestHistory
         fields = ('id', 'credit_request', 'employee', 'amount', 'reason', 'status', 'approver_note', 'approved_by', 'approval_date', 'activity_type')
+
+
+
+class CourseProviderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CourseProvider
+        fields = ('id', 'name', 'code', 'course_provider_logo_uri', 'content_db_reference', 'refund_email',
+                  'configuration')
+
+        def validate_configuration(self, value):
+            """
+            Ensure configuration contains json data
+            """
+
+            if not isinstance(value, dict):
+                raise serializers.ValidationError("value must be valid json")
+            return value
+
+
+class CourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ('id', 'course_provider', 'title', 'content_ready', 'slug', 'content_db_reference', 'course_image_uri',
+                  'external_image_url', 'active_status')
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['course_provider'] = CourseProviderSerializer(
+            CourseProvider.objects.get(id=data['course_provider'])).data
+
+        if data['course_image_uri'] is None:
+            data['course_image_uri'] = data['external_image_url']
+
+        # skills details tagged with a course
+        try:
+            course_model = CourseModel.objects.get(pk=data['content_db_reference'])
+        except CourseModel.DoesNotExist:
+            data['skills'] = []
+        else:
+            data['skills'] = [
+                {
+                    "id": str(item.id),
+                    "name": str(item.name),
+                    "skill_type": str(item.skill_type),
+                    "example": str(item.example),
+                    "hot": str(item.hot),
+                }
+                for item in course_model.skills
+            ]
+        return data
