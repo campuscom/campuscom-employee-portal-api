@@ -53,6 +53,7 @@ class SkillView(APIView, SharedMixin, PaginatorMixin):
                     pass
                 else:
                     data.append({
+                        'id': str(skill_data.id),
                         'status': status,
                         "name": str(skill_data.name),
                         "skill_type": str(skill_data.skill_type),
