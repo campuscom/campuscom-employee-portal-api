@@ -9,3 +9,6 @@ from .credit_request_view_set import CreditRequestViewSet
 
 from .skill_view import SkillView
 from .course_view import CourseView
+
+from .profile_details_view import ProfileDetailsView
+from .complete_skill_view import CompleteSkillView

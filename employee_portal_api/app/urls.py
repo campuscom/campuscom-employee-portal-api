@@ -20,7 +20,8 @@ from rest_framework import routers
 from rest_framework_simplejwt.views import TokenRefreshView
 
 from app.views import (health_check, MyTokenObtainPairView, EmployeeViewSet, DepartmentViewSet, OrganizationViewSet,
-                       EmployeeAccountViewSet, CreditRequestViewSet, SkillView, CourseView)
+                       EmployeeAccountViewSet, CreditRequestViewSet, SkillView, CourseView, ProfileDetailsView,
+                       CompleteSkillView)
 
 router = routers.DefaultRouter()
 
@@ -39,4 +40,6 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path(r'skills/', SkillView.as_view(), name='skill'),
     path(r'courses/', CourseView.as_view(), name='courses'),
+    path(r'profile-details/', ProfileDetailsView.as_view(), name='profile_details'),
+    path(r'complete-skills/', CompleteSkillView.as_view(), name='complete_skills'),
 ]
